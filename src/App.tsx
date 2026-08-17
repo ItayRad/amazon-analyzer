@@ -38,7 +38,7 @@ const BookIcon = () => (
   </svg>
 )
 
-// ─── Section wrapper with reveal animation ────────────────────────────────────
+// ─── Section with scroll reveal ───────────────────────────────────────────────
 
 interface SectionProps {
   id: string
@@ -66,31 +66,22 @@ const Section = ({ id, children, className = '' }: SectionProps) => {
   }, [])
 
   return (
-    <section
-      id={id}
-      ref={ref}
-      className={`reveal-section ${className}`}
-    >
+    <section id={id} ref={ref} className={`reveal-section ${className}`}>
       {children}
     </section>
   )
 }
 
-// ─── Card component ───────────────────────────────────────────────────────────
+// ─── Card ─────────────────────────────────────────────────────────────────────
 
 interface CardProps {
   icon: React.ReactNode
   label: string
   children: React.ReactNode
-  delay?: number
 }
 
-const Card = ({ icon, label, children, delay = 0 }: CardProps) => (
-  <div
-    className="group relative rounded-2xl p-px overflow-hidden"
-    style={{ animationDelay: `${delay}ms` }}
-  >
-    {/* gradient border */}
+const Card = ({ icon, label, children }: CardProps) => (
+  <div className="group relative rounded-2xl p-px overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-br from-amber-400/30 via-transparent to-blue-500/20 rounded-2xl pointer-events-none" />
     <div className="relative rounded-2xl bg-[#0d1526] p-6 h-full transition-colors duration-300 group-hover:bg-[#111d38]">
       <div className="flex items-center gap-3 mb-4">
@@ -125,25 +116,15 @@ const Navbar = () => (
 
 const Hero = () => (
   <div className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-    {/* Background radial glow */}
     <div className="absolute inset-0 pointer-events-none">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-amber-400/5 blur-[100px]" />
       <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-blue-600/5 blur-[80px]" />
     </div>
 
-    {/* Subtle grid texture */}
-    <div
-      className="absolute inset-0 pointer-events-none opacity-[0.03]"
-      style={{
-        backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-        backgroundSize: '60px 60px',
-      }}
-    />
-
     <div className="relative z-10 max-w-3xl mx-auto">
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-medium tracking-widest uppercase mb-8 animate-fade-in">
         <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-        Internal Tool · Not Public
+        Internal Tool
       </div>
 
       <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-6 animate-fade-up">
@@ -176,7 +157,6 @@ const Hero = () => (
       </div>
     </div>
 
-    {/* Scroll indicator */}
     <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-600 animate-bounce">
       <span className="text-xs tracking-widest uppercase">Scroll</span>
       <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -186,12 +166,12 @@ const Hero = () => (
   </div>
 )
 
-// ─── Stat badge ───────────────────────────────────────────────────────────────
+// ─── Feature pill ─────────────────────────────────────────────────────────────
 
-const Stat = ({ value, label }: { value: string; label: string }) => (
-  <div className="flex flex-col items-center gap-1 px-6 py-4 rounded-xl bg-white/[0.03] border border-white/5">
-    <span className="font-display text-2xl font-bold text-amber-400">{value}</span>
-    <span className="text-xs text-slate-500 text-center">{label}</span>
+const Feature = ({ label, desc }: { label: string; desc: string }) => (
+  <div className="rounded-lg bg-white/[0.03] border border-white/5 px-4 py-3">
+    <div className="text-xs font-semibold text-amber-400 mb-1">{label}</div>
+    <div className="text-xs text-slate-500">{desc}</div>
   </div>
 )
 
@@ -210,18 +190,10 @@ export default function App() {
           opacity: 1;
           transform: translateY(0);
         }
-        .animate-fade-up {
-          animation: fadeUp 0.7s ease-out forwards;
-        }
-        .animate-fade-up-delay {
-          animation: fadeUp 0.7s ease-out 0.25s forwards;
-        }
-        .animate-fade-up-delay-2 {
-          animation: fadeUp 0.7s ease-out 0.45s forwards;
-        }
-        .animate-fade-in {
-          animation: fadeIn 1s ease-out forwards;
-        }
+        .animate-fade-up        { animation: fadeUp 0.7s ease-out forwards; }
+        .animate-fade-up-delay  { animation: fadeUp 0.7s ease-out 0.25s forwards; }
+        .animate-fade-up-delay-2{ animation: fadeUp 0.7s ease-out 0.45s forwards; }
+        .animate-fade-in        { animation: fadeIn 1s ease-out forwards; }
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -237,49 +209,33 @@ export default function App() {
       {/* ── Hero ── */}
       <Hero />
 
-      {/* ── Stats strip ── */}
-      <div className="max-w-3xl mx-auto px-6 pb-20">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Stat value="BSR" label="Best Sellers Rank tracking" />
-          <Stat value="Live" label="Real-time pricing data" />
-          <Stat value="0" label="User data collected" />
-          <Stat value="Internal" label="Access restricted" />
-        </div>
-      </div>
-
-      {/* ── Main content ── */}
+      {/* ── Cards ── */}
       <div className="max-w-4xl mx-auto px-6 pb-32 space-y-6">
 
-        {/* About / API Justification */}
+        {/* About */}
         <Section id="about">
-          <Card icon={<BookIcon />} label="About The Project — API Justification">
+          <Card icon={<BookIcon />} label="About">
             <p className="text-slate-300 leading-relaxed text-base">
-              This application integrates with the Amazon Product Advertising API to retrieve
-              up-to-date Best Sellers Rank (BSR) data, pricing, and search volume metrics. The
-              data is used strictly for internal market analysis to identify highly competitive
-              publishing niches. This is an internal tool and is not distributed to the public.
+              KDP Market Analyzer connects to the Amazon Product Advertising API to pull
+              live Best Sellers Rank, pricing, and search volume data across publishing
+              categories. The platform gives admins a single workspace to track niche
+              performance, manage ad campaigns, and surface content opportunities — all
+              in real time.
             </p>
             <div className="mt-5 grid sm:grid-cols-3 gap-3">
-              {[
-                { label: 'BSR Data', desc: 'Real-time rank tracking across categories' },
-                { label: 'Pricing', desc: 'Current market price intelligence' },
-                { label: 'Search Volume', desc: 'Keyword demand metrics' },
-              ].map(({ label, desc }) => (
-                <div key={label} className="rounded-lg bg-white/[0.03] border border-white/5 px-4 py-3">
-                  <div className="text-xs font-semibold text-amber-400 mb-1">{label}</div>
-                  <div className="text-xs text-slate-500">{desc}</div>
-                </div>
-              ))}
+              <Feature label="BSR Tracking" desc="Live rank monitoring across all categories" />
+              <Feature label="Ad Management" desc="Campaign oversight and performance metrics" />
+              <Feature label="Content Insights" desc="Keyword demand and niche gap analysis" />
             </div>
           </Card>
         </Section>
 
-        {/* Privacy Policy */}
+        {/* Privacy */}
         <Section id="privacy">
           <Card icon={<ShieldIcon />} label="Privacy Policy">
             <p className="text-slate-300 leading-relaxed text-base">
-              Privacy Policy: This application does not collect, harvest, store, or sell any
-              personal user information. No trackers or cookies are used on this landing page.
+              This application does not collect, harvest, store, or sell any personal user
+              information. No trackers or cookies are used on this landing page.
             </p>
             <ul className="mt-5 space-y-2">
               {[
@@ -305,7 +261,7 @@ export default function App() {
         <Section id="contact">
           <Card icon={<MailIcon />} label="Contact">
             <p className="text-slate-300 leading-relaxed text-base mb-5">
-              For API compliance inquiries, please contact:
+              For inquiries, please reach out:
             </p>
             <a
               href="mailto:print.travelik@gmail.com"
@@ -320,23 +276,23 @@ export default function App() {
           </Card>
         </Section>
 
-        {/* Analytics decoration card */}
+        {/* Analytics preview */}
         <Section id="metrics">
-          <Card icon={<ChartIcon />} label="Data Metrics Overview">
+          <Card icon={<ChartIcon />} label="Market Overview">
             <p className="text-slate-400 text-sm mb-5">
-              Sample categories tracked for niche discovery and competitive analysis.
+              Sample niche data tracked across publishing categories.
             </p>
             <div className="space-y-3">
               {[
-                { category: 'Travel Guides', bsr: '#1,204', competition: 'High', score: 78 },
-                { category: 'Language Learning', bsr: '#3,891', competition: 'Medium', score: 54 },
-                { category: 'Self-Help Journals', bsr: '#892', competition: 'Very High', score: 91 },
-                { category: 'Puzzle Books', bsr: '#2,110', competition: 'Medium', score: 62 },
-              ].map(({ category, bsr, competition, score }) => (
+                { category: 'Travel Guides',      bsr: '#1,204', trend: '+12%', score: 78 },
+                { category: 'Language Learning',   bsr: '#3,891', trend: '+4%',  score: 54 },
+                { category: 'Self-Help Journals',  bsr: '#892',   trend: '+21%', score: 91 },
+                { category: 'Puzzle Books',        bsr: '#2,110', trend: '+8%',  score: 62 },
+              ].map(({ category, bsr, trend, score }) => (
                 <div key={category} className="flex items-center justify-between gap-4 py-2 border-b border-white/5 last:border-0">
                   <div className="min-w-0">
                     <div className="text-sm font-medium text-slate-200 truncate">{category}</div>
-                    <div className="text-xs text-slate-500">BSR {bsr} · {competition}</div>
+                    <div className="text-xs text-slate-500">BSR {bsr} · <span className="text-emerald-400">{trend}</span></div>
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <div className="w-24 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -352,12 +308,13 @@ export default function App() {
             </div>
           </Card>
         </Section>
+
       </div>
 
       {/* ── Footer ── */}
       <footer className="border-t border-white/5 py-8 px-6 text-center">
         <p className="text-xs text-slate-600">
-          © {new Date().getFullYear()} KDP Market Analyzer · Internal use only · No user data collected
+          © {new Date().getFullYear()} KDP Market Analyzer · Internal use only
         </p>
       </footer>
     </div>
